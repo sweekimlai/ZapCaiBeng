@@ -16,7 +16,7 @@ public class Customer : MonoBehaviour
 
     private void Start()
     {
-        foodOrder = FindObjectOfType<FoodList>().GetFoodOrder();
+        foodOrder = FindObjectOfType<CustomerCommands>().GetFoodOrder();
     }
 
     public void StartMoving()
@@ -43,11 +43,7 @@ public class Customer : MonoBehaviour
             Destroy speechBubble and all child objects under foodOrder gameobject
         */
         Destroy(currentSpeechBubble.gameObject);
-        List<GameObject> currentOrder = foodOrder.GetComponent<FoodOrder>().GetCurrentOrder();
-        foreach (GameObject order in currentOrder)
-        {
-            Destroy(order.gameObject);
-        }
+        foodOrder.GetComponent<FoodOrder>().DestroyAllFoodOrder();
     }
 
     public void ShowFoodOrder()

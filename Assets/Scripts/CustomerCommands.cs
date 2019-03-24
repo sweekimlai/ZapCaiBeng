@@ -5,6 +5,8 @@ using UnityEngine;
 public class CustomerCommands : MonoBehaviour
 {
     [SerializeField] GameObject customerQueue;
+    [SerializeField] GameObject foodOrder;
+    [SerializeField] GameObject ticksDisplay;
     float queueGap;
     float moveSpeed;
     int topOrderLayer;
@@ -20,7 +22,12 @@ public class CustomerCommands : MonoBehaviour
         topOrderLayer = customerQueue.GetComponent<CustomerQueue>().GetTopOrderLayer();
     }
 
-    public void CallingCustomer()
+    public GameObject GetFoodOrder()
+    {
+        return foodOrder;
+    }
+
+    public void CallingAllCustomers()
     {
         /*
             Gather all Customer GameObjects and line them up based on the CustomerQueue 
@@ -41,7 +48,7 @@ public class CustomerCommands : MonoBehaviour
         }
     }
 
-    public void GetCurrentCustomer()
+    public void CallingFirstCustomer()
     {
         /*
             Find the first in the queue, top child gameobject under 
@@ -57,7 +64,7 @@ public class CustomerCommands : MonoBehaviour
     public void DoneServing()
     {
         /*
-            When serving is done, destroy SpeechBubble gameobject and
+            When serving is done, destroy SpeechBubble, ticks gameobject and
             set CurrentCustomer moving to left
         */
         if (FindObjectOfType<CustomerQueue>().GetCustomerCount() > 0)
@@ -65,6 +72,36 @@ public class CustomerCommands : MonoBehaviour
             GameObject currentCustomer = FindObjectOfType<CustomerQueue>().GetCurrentCustomer();
             currentCustomer.GetComponent<Customer>().StartMoving();
             currentCustomer.GetComponent<Customer>().DestroyFoodOrder();
+            ticksDisplay.GetComponent<TicksDisplay>().DestroyAllTicks();
+        }
+    }
+
+    public void FindMatchingFood(string selectedFood)
+    {
+        /*
+            Find matching food from user selected food. If match is found,
+            display a tick and set the correct food image alpha to half.
+        */
+        bool foodFound = false;
+        List<GameObject> currentOrder = foodOrder.GetComponent<FoodOrder>().GetCurrentOrder();
+        if(currentOrder.Count <= 0) { return; }
+
+        foreach (GameObject order in currentOrder)
+        {
+            SpriteRenderer foodSprite = order.GetComponent<SpriteRenderer>();
+            if(foodSprite.sprite.name == selectedFood)
+            {
+                foodFound = true;
+                foodSprite.color = new Color(1f, 1f, 1f, 0.5f);
+                GameObject tick = ticksDisplay.GetComponent<TicksDisplay>().GetTick();
+                GameObject newTick = Instantiate(tick, order.transform.position , Quaternion.identity) as GameObject;
+                newTick.transform.parent = ticksDisplay.transform;
+            }
+        }
+
+        if(!foodFound)
+        {
+            Debug.Log(string.Format("Selected food {0} not found", selectedFood));
         }
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class FoodList : MonoBehaviour
 {
     [SerializeField] List<Food> allFood;
-    [SerializeField] GameObject foodOrder;
 
     public List<Food> GetFood(int orderNum)
     {
@@ -34,10 +33,5 @@ public class FoodList : MonoBehaviour
         }
 
         return randomFoodList;
-    }
-
-    public GameObject GetFoodOrder()
-    {
-        return foodOrder;
     }
 }
