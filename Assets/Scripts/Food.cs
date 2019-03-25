@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
+    [SerializeField] CustomerCommands customerCommands;
     private void OnMouseDown()
     {
         /*
@@ -11,7 +12,11 @@ public class Food : MonoBehaviour
             send the name of the selected food to check if 
             it is in the food order list
         */
+        if (!customerCommands)
+        {
+            Debug.LogError("customerCommands not found");
+        }
         Sprite foodImage = GetComponent<SpriteRenderer>().sprite;
-        FindObjectOfType<CustomerCommands>().FindMatchingFood(foodImage.name);
+        customerCommands.GetComponent<CustomerCommands>().FindMatchingFood(foodImage.name);
     }
 }

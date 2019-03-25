@@ -6,6 +6,7 @@ public class Customer : MonoBehaviour
 {    
     [SerializeField] float speed = 10.0f;
     [SerializeField] GameObject speechBubble;
+
     bool startMoving = false;
     GameObject currentSpeechBubble;
     GameObject foodOrder;

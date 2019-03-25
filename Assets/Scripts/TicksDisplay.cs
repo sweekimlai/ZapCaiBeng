@@ -16,6 +16,12 @@ public class TicksDisplay : MonoBehaviour
         return transform.childCount;
     }
 
+    public void AddTick(GameObject food)
+    {
+        GameObject newTick = Instantiate(tick, food.transform.position, Quaternion.identity) as GameObject;
+        newTick.transform.parent = transform;
+    }
+
     public void DestroyAllTicks()
     {
         for (int i = 0; i < transform.childCount; i++)

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CustomerCommands : MonoBehaviour
 {
-    [SerializeField] GameObject customerQueue;
     [SerializeField] GameObject foodOrder;
+    [SerializeField] GameObject customerQueue;
+    [SerializeField] GameObject customerList;    
     [SerializeField] GameObject ticksDisplay;
     float queueGap;
     float moveSpeed;
@@ -34,7 +35,7 @@ public class CustomerCommands : MonoBehaviour
             gameobject X position. Set a X pos gap between each customer and assign each
             customer with an order layer
         */
-        List<Customer> allCustomers = FindObjectOfType<CustomerList>().GetAllCustomers();
+        List<Customer> allCustomers = customerList.GetComponent<CustomerList>().GetAllCustomers();
         float customerXPos = customerQueue.transform.position.x;
         int customerOrderLayer = topOrderLayer;
         foreach (Customer customer in allCustomers)
@@ -54,9 +55,9 @@ public class CustomerCommands : MonoBehaviour
             Find the first in the queue, top child gameobject under 
             CustomerQueue gameobject and return it as current customer
         */
-        if(FindObjectOfType<CustomerQueue>().GetCustomerCount() > 0)
+        if(customerQueue.GetComponent<CustomerQueue>().GetCustomerCount() > 0)
         {
-            GameObject currentCustomer = FindObjectOfType<CustomerQueue>().GetCurrentCustomer();
+            GameObject currentCustomer = customerQueue.GetComponent<CustomerQueue>().GetCurrentCustomer();
             currentCustomer.GetComponent<Customer>().StartMoving();
         }
     }
@@ -67,9 +68,9 @@ public class CustomerCommands : MonoBehaviour
             When serving is done, destroy SpeechBubble, ticks gameobject and
             set CurrentCustomer moving to left
         */
-        if (FindObjectOfType<CustomerQueue>().GetCustomerCount() > 0)
+        if (customerQueue.GetComponent<CustomerQueue>().GetCustomerCount() > 0)
         {
-            GameObject currentCustomer = FindObjectOfType<CustomerQueue>().GetCurrentCustomer();
+            GameObject currentCustomer = customerQueue.GetComponent<CustomerQueue>().GetCurrentCustomer();
             currentCustomer.GetComponent<Customer>().StartMoving();
             currentCustomer.GetComponent<Customer>().DestroyFoodOrder();
             ticksDisplay.GetComponent<TicksDisplay>().DestroyAllTicks();
@@ -84,6 +85,7 @@ public class CustomerCommands : MonoBehaviour
         */
         bool foodFound = false;
         List<GameObject> currentOrder = foodOrder.GetComponent<FoodOrder>().GetCurrentOrder();
+        
         if(currentOrder.Count <= 0) { return; }
 
         foreach (GameObject order in currentOrder)
@@ -93,9 +95,7 @@ public class CustomerCommands : MonoBehaviour
             {
                 foodFound = true;
                 foodSprite.color = new Color(1f, 1f, 1f, 0.5f);
-                GameObject tick = ticksDisplay.GetComponent<TicksDisplay>().GetTick();
-                GameObject newTick = Instantiate(tick, order.transform.position , Quaternion.identity) as GameObject;
-                newTick.transform.parent = ticksDisplay.transform;
+                ticksDisplay.GetComponent<TicksDisplay>().AddTick(order);
             }
         }
 
