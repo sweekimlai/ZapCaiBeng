@@ -97,8 +97,7 @@ MonoBehaviour:
   speed: 10
   speechBubble: {fileID: 4727448133182967160, guid: 335321993800121469a32eda95fb2242,
     type: 3}
-  customerCommands: {fileID: 0}
-  foodOrder: {fileID: 3363441983850036845, guid: 80f53943e50df2142a8d8382c5c1621f,
+  foodList: {fileID: 8434737017988628889, guid: b3ccfa7294537ef48b421dbe1b484748,
     type: 3}
 --- !u!61 &6546661018964626262
 BoxCollider2D:

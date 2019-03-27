@@ -6,10 +6,12 @@ public class Customer : MonoBehaviour
 {    
     [SerializeField] float speed = 10.0f;
     [SerializeField] GameObject speechBubble;
+    [SerializeField] GameObject foodList;
 
     bool startMoving = false;
     GameObject currentSpeechBubble;
     GameObject foodOrder;
+    GameObject currentFoodOrder;
     float speechOffset = 2.0f;
     float speechBubbleMargin = 0.1f;
     float foodPosGap = 1.2f;
@@ -17,6 +19,11 @@ public class Customer : MonoBehaviour
 
     private void Start()
     {
+        if (!GameObject.Find("currentFoodOrder"))
+        {
+            currentFoodOrder = new GameObject("currentFoodOrder");            
+        }
+        
         foodOrder = FindObjectOfType<CustomerCommands>().GetFoodOrder();
     }
 
@@ -59,11 +66,11 @@ public class Customer : MonoBehaviour
         float ypos = GetComponent<SpriteRenderer>().bounds.max.y;
         currentSpeechBubble = Instantiate(speechBubble, new Vector2(xpos, ypos), Quaternion.identity) as GameObject;        
 
-        List<Food> randomFood = FindObjectOfType<FoodList>().GetFood(3);
+        List<Food> randomFood = foodList.GetComponent<FoodList>().GetFood(3);
         float foodPosX = currentSpeechBubble.GetComponent<SpriteRenderer>().bounds.min.x + speechBubbleMargin;
         foreach (Food food in randomFood)
         {
-            Food newFood = Instantiate(food, new Vector2(foodPosX, ypos - speechBubbleMargin), Quaternion.identity) as Food;            
+            Food newFood = Instantiate(food, new Vector2(foodPosX, ypos - speechBubbleMargin), Quaternion.identity) as Food;
             newFood.transform.localScale = new Vector3(foodIconScale, foodIconScale, 0.0f);
             newFood.transform.parent = foodOrder.transform;
             foodPosX += foodPosGap;
