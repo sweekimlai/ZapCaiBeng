@@ -3,29 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CustomerCommands : MonoBehaviour
-{
-    [SerializeField] GameObject foodOrder;
-    [SerializeField] GameObject customerQueue;
+{   
+    [SerializeField] GameObject customerQueueLocation;
     [SerializeField] GameObject customerList;    
     [SerializeField] GameObject ticksDisplay;
-    float queueGap;
+    [SerializeField] float queueGap = 0.5f;
+    [SerializeField] int topOrderLayer = 20;
+    GameObject customerGroup;
     float moveSpeed;
-    int topOrderLayer;
 
     private void Start()
     {
-        if (!customerQueue)
+        if (!GameObject.Find("customerGroup"))
         {
-            Debug.LogError("No CustomerQueue gameobject found.");
+            customerGroup = new GameObject("customerGroup");
         }
-
-        queueGap = customerQueue.GetComponent<CustomerQueue>().GetQueueGap();
-        topOrderLayer = customerQueue.GetComponent<CustomerQueue>().GetTopOrderLayer();
-    }
-
-    public GameObject GetFoodOrder()
-    {
-        return foodOrder;
     }
 
     public void CallingAllCustomers()
@@ -36,14 +28,14 @@ public class CustomerCommands : MonoBehaviour
             customer with an order layer
         */
         List<Customer> allCustomers = customerList.GetComponent<CustomerList>().GetAllCustomers();
-        float customerXPos = customerQueue.transform.position.x;
+        float customerXPos = customerQueueLocation.transform.position.x;
         int customerOrderLayer = topOrderLayer;
         foreach (Customer customer in allCustomers)
         {
-            Vector2 customerQueuePosition = new Vector2(customerXPos, customerQueue.transform.position.y);
+            Vector2 customerQueuePosition = new Vector2(customerXPos, customerQueueLocation.transform.position.y);
             Customer newCustomer = Instantiate(customer, customerQueuePosition, Quaternion.identity) as Customer;
             newCustomer.GetComponent<Renderer>().sortingOrder = customerOrderLayer;
-            newCustomer.transform.parent = customerQueue.transform;
+            newCustomer.transform.parent = customerGroup.transform;
             customerXPos += queueGap;
             customerOrderLayer -= 1;
         }
@@ -55,9 +47,9 @@ public class CustomerCommands : MonoBehaviour
             Find the first in the queue, top child gameobject under 
             CustomerQueue gameobject and return it as current customer
         */
-        if(customerQueue.GetComponent<CustomerQueue>().GetCustomerCount() > 0)
+        if(customerGroup.transform.childCount > 0)
         {
-            GameObject currentCustomer = customerQueue.GetComponent<CustomerQueue>().GetCurrentCustomer();
+            GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
             currentCustomer.GetComponent<Customer>().StartMoving();
         }
     }
@@ -68,9 +60,9 @@ public class CustomerCommands : MonoBehaviour
             When serving is done, destroy SpeechBubble, ticks gameobject and
             set CurrentCustomer moving to left
         */
-        if (customerQueue.GetComponent<CustomerQueue>().GetCustomerCount() > 0)
+        if (customerGroup.transform.childCount > 0)
         {
-            GameObject currentCustomer = customerQueue.GetComponent<CustomerQueue>().GetCurrentCustomer();
+            GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
             currentCustomer.GetComponent<Customer>().StartMoving();
             currentCustomer.GetComponent<Customer>().DestroyFoodOrder();
             ticksDisplay.GetComponent<TicksDisplay>().DestroyAllTicks();
@@ -83,10 +75,13 @@ public class CustomerCommands : MonoBehaviour
             Find matching food from user selected food. If match is found,
             display a tick and set the correct food image alpha to half.
         */
+        if(customerGroup.transform.childCount <= 0) { return; }
+
         bool foodFound = false;
-        List<GameObject> currentOrder = foodOrder.GetComponent<FoodOrder>().GetCurrentOrder();
-        
-        if(currentOrder.Count <= 0) { return; }
+        GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
+        List<GameObject> currentOrder = currentCustomer.GetComponent<Customer>().GetCurrentOrder();
+
+        if (currentOrder.Count <= 0) { return; }
 
         foreach (GameObject order in currentOrder)
         {

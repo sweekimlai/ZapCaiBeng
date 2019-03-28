@@ -10,21 +10,12 @@ public class Customer : MonoBehaviour
 
     bool startMoving = false;
     GameObject currentSpeechBubble;
-    GameObject foodOrder;
-    GameObject currentFoodOrder;
-    float speechOffset = 2.0f;
-    float speechBubbleMargin = 0.1f;
-    float foodPosGap = 1.2f;
+    GameObject foodOrderGroup;
     float foodIconScale = 0.4f;
 
     private void Start()
     {
-        if (!GameObject.Find("currentFoodOrder"))
-        {
-            currentFoodOrder = new GameObject("currentFoodOrder");            
-        }
-        
-        foodOrder = FindObjectOfType<CustomerCommands>().GetFoodOrder();
+        foodOrderGroup = new GameObject("foodOrderGroup");
     }
 
     public void StartMoving()
@@ -45,13 +36,28 @@ public class Customer : MonoBehaviour
         }
     }
 
+    public List<GameObject> GetCurrentOrder()
+    {
+        /*
+            Return all food child gameobjects as list
+        */
+        if (!foodOrderGroup) { return null; }
+
+        List<GameObject> currentOrder = new List<GameObject>();
+        for (int i = 0; i < foodOrderGroup.transform.childCount; i++)
+        {
+            currentOrder.Add(foodOrderGroup.transform.GetChild(i).gameObject);
+        }
+        return currentOrder;
+    }
+
     public void DestroyFoodOrder()
     {
         /*
             Destroy speechBubble and all child objects under foodOrder gameobject
         */
         Destroy(currentSpeechBubble.gameObject);
-        foodOrder.GetComponent<FoodOrder>().DestroyAllFoodOrder();
+        Destroy(foodOrderGroup.gameObject);
     }
 
     public void ShowFoodOrder()
@@ -61,19 +67,22 @@ public class Customer : MonoBehaviour
             then offset the speech bubble from it.
             Add food icons based on the speechbubble location
             then offset from it.
-        */
-        float xpos = GetComponent<SpriteRenderer>().bounds.min.x - speechOffset;
-        float ypos = GetComponent<SpriteRenderer>().bounds.max.y;
-        currentSpeechBubble = Instantiate(speechBubble, new Vector2(xpos, ypos), Quaternion.identity) as GameObject;        
+        */        
+        currentSpeechBubble = Instantiate(speechBubble, new Vector2(
+            transform.GetChild(0).position.x, transform.GetChild(0).position.y), 
+            Quaternion.identity) as GameObject;
 
         List<Food> randomFood = foodList.GetComponent<FoodList>().GetFood(3);
-        float foodPosX = currentSpeechBubble.GetComponent<SpriteRenderer>().bounds.min.x + speechBubbleMargin;
+        int childIndex = 0;
         foreach (Food food in randomFood)
         {
-            Food newFood = Instantiate(food, new Vector2(foodPosX, ypos - speechBubbleMargin), Quaternion.identity) as Food;
+            Food newFood = Instantiate(food, new Vector2(
+                currentSpeechBubble.transform.GetChild(childIndex).position.x, 
+                currentSpeechBubble.transform.GetChild(childIndex).position.y), 
+                Quaternion.identity) as Food;
             newFood.transform.localScale = new Vector3(foodIconScale, foodIconScale, 0.0f);
-            newFood.transform.parent = foodOrder.transform;
-            foodPosX += foodPosGap;
+            newFood.transform.parent = foodOrderGroup.transform;
+            childIndex += 1;
         }
     }
 }
