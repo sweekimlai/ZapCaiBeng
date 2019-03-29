@@ -6,18 +6,17 @@ public class CustomerCommands : MonoBehaviour
 {   
     [SerializeField] GameObject customerQueueLocation;
     [SerializeField] GameObject customerList;    
-    [SerializeField] GameObject ticksDisplay;
+    [SerializeField] GameObject tick;
     [SerializeField] float queueGap = 0.5f;
     [SerializeField] int topOrderLayer = 20;
     GameObject customerGroup;
+    GameObject tickGroup;
     float moveSpeed;
 
     private void Start()
     {
-        if (!GameObject.Find("customerGroup"))
-        {
-            customerGroup = new GameObject("customerGroup");
-        }
+        customerGroup = new GameObject("customerGroup");
+        tickGroup = new GameObject("tickGroup");
     }
 
     public void CallingAllCustomers()
@@ -64,8 +63,11 @@ public class CustomerCommands : MonoBehaviour
         {
             GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
             currentCustomer.GetComponent<Customer>().StartMoving();
-            currentCustomer.GetComponent<Customer>().DestroyFoodOrder();
-            ticksDisplay.GetComponent<TicksDisplay>().DestroyAllTicks();
+            currentCustomer.GetComponent<Customer>().DestroyFoodOrder();            
+            for(int i = 0; i < tickGroup.transform.childCount; i++)
+            {
+                Destroy(tickGroup.transform.GetChild(i).gameObject);
+            }
         }
     }
 
@@ -89,8 +91,9 @@ public class CustomerCommands : MonoBehaviour
             if(foodSprite.sprite.name == selectedFood)
             {
                 foodFound = true;
-                foodSprite.color = new Color(1f, 1f, 1f, 0.5f);
-                ticksDisplay.GetComponent<TicksDisplay>().AddTick(order);
+                foodSprite.color = new Color(1f, 1f, 1f, 0.5f);                
+                GameObject newTick = Instantiate(tick, order.transform.position, Quaternion.identity) as GameObject;
+                newTick.transform.parent = tickGroup.transform;
             }
         }
 

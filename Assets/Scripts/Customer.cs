@@ -15,7 +15,7 @@ public class Customer : MonoBehaviour
 
     private void Start()
     {
-        foodOrderGroup = new GameObject("foodOrderGroup");
+        //foodOrderGroup = new GameObject("foodOrderGroup");
     }
 
     public void StartMoving()
@@ -67,7 +67,9 @@ public class Customer : MonoBehaviour
             then offset the speech bubble from it.
             Add food icons based on the speechbubble location
             then offset from it.
-        */        
+        */
+        foodOrderGroup = new GameObject("foodOrderGroup");
+
         currentSpeechBubble = Instantiate(speechBubble, new Vector2(
             transform.GetChild(0).position.x, transform.GetChild(0).position.y), 
             Quaternion.identity) as GameObject;
