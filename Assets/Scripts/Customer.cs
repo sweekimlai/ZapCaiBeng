@@ -12,11 +12,7 @@ public class Customer : MonoBehaviour
     GameObject currentSpeechBubble;
     GameObject foodOrderGroup;
     float foodIconScale = 0.4f;
-
-    private void Start()
-    {
-        //foodOrderGroup = new GameObject("foodOrderGroup");
-    }
+    int numberOfOrder = 3;
 
     public void StartMoving()
     {
@@ -38,9 +34,7 @@ public class Customer : MonoBehaviour
 
     public List<GameObject> GetCurrentOrder()
     {
-        /*
-            Return all food child gameobjects as list
-        */
+        /* Return all food child gameobjects under foodOrderGroup as list */
         if (!foodOrderGroup) { return null; }
 
         List<GameObject> currentOrder = new List<GameObject>();
@@ -53,34 +47,29 @@ public class Customer : MonoBehaviour
 
     public void DestroyFoodOrder()
     {
-        /*
-            Destroy speechBubble and all child objects under foodOrder gameobject
-        */
+        /* Destroy speechBubble and foodOrderGroup gameobject
+        along with all its children gameobjects */
         Destroy(currentSpeechBubble.gameObject);
         Destroy(foodOrderGroup.gameObject);
     }
-
+    
     public void ShowFoodOrder()
     {
-        /*
-            Find top left corner location of current customer 
-            then offset the speech bubble from it.
-            Add food icons based on the speechbubble location
-            then offset from it.
-        */
+        /* Every Customer gameobject has a child gameobject indicating
+        the position of the speech bubble. SpeechBubble object will 
+        spawn at thie location. The SpeechBubble has three child
+        gameobjects indicating the locations of the spawned food 
+        gameobjects. At the moment the number of foods, three, is
+        hardcoded */
+
         foodOrderGroup = new GameObject("foodOrderGroup");
+        currentSpeechBubble = Instantiate(speechBubble, transform.GetChild(0).position, Quaternion.identity) as GameObject;
 
-        currentSpeechBubble = Instantiate(speechBubble, new Vector2(
-            transform.GetChild(0).position.x, transform.GetChild(0).position.y), 
-            Quaternion.identity) as GameObject;
-
-        List<Food> randomFood = foodList.GetComponent<FoodList>().GetFood(3);
+        List<Food> randomFood = foodList.GetComponent<FoodList>().GetFood(numberOfOrder);
         int childIndex = 0;
         foreach (Food food in randomFood)
         {
-            Food newFood = Instantiate(food, new Vector2(
-                currentSpeechBubble.transform.GetChild(childIndex).position.x, 
-                currentSpeechBubble.transform.GetChild(childIndex).position.y), 
+            Food newFood = Instantiate(food,currentSpeechBubble.transform.GetChild(childIndex).position, 
                 Quaternion.identity) as Food;
             newFood.transform.localScale = new Vector3(foodIconScale, foodIconScale, 0.0f);
             newFood.transform.parent = foodOrderGroup.transform;

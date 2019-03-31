@@ -21,11 +21,10 @@ public class CustomerCommands : MonoBehaviour
 
     public void CallingAllCustomers()
     {
-        /*
-            Gather all Customer GameObjects and line them up based on the CustomerQueue 
-            gameobject X position. Set a X pos gap between each customer and assign each
-            customer with an order layer
-        */
+        /* Gather all Customer GameObjects and line them up based on the CustomerQueue 
+        gameobject X position. Set a X pos gap between each customer and assign each
+        customer with an order layer */
+
         List<Customer> allCustomers = customerList.GetComponent<CustomerList>().GetAllCustomers();
         float customerXPos = customerQueueLocation.transform.position.x;
         int customerOrderLayer = topOrderLayer;
@@ -42,10 +41,9 @@ public class CustomerCommands : MonoBehaviour
 
     public void CallingFirstCustomer()
     {
-        /*
-            Find the first in the queue, top child gameobject under 
-            CustomerQueue gameobject and return it as current customer
-        */
+        /* Find the first in the queue, top child gameobject under 
+        CustomerQueue gameobject and return it as current customer */
+
         if(customerGroup.transform.childCount > 0)
         {
             GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
@@ -55,10 +53,8 @@ public class CustomerCommands : MonoBehaviour
 
     public void DoneServing()
     {
-        /*
-            When serving is done, destroy SpeechBubble, ticks gameobject and
-            set CurrentCustomer moving to left
-        */
+        /* When serving is done, destroy SpeechBubble, ticks gameobject and
+        set CurrentCustomer moving to left */
         if (customerGroup.transform.childCount > 0)
         {
             GameObject currentCustomer = customerGroup.transform.GetChild(0).gameObject;
@@ -73,10 +69,9 @@ public class CustomerCommands : MonoBehaviour
 
     public void FindMatchingFood(string selectedFood)
     {
-        /*
-            Find matching food from user selected food. If match is found,
-            display a tick and set the correct food image alpha to half.
-        */
+        /* Find matching food from user selected food. If match is found,
+        display a tick and set the correct food image alpha to half */
+
         if(customerGroup.transform.childCount <= 0) { return; }
 
         bool foodFound = false;

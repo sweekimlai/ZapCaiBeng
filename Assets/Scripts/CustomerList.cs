@@ -8,9 +8,7 @@ public class CustomerList : MonoBehaviour
     
     private List<Customer> ShuffleCustomers()
     {
-        /*
-         shuffle customers and return it as a list type
-        */
+        /* shuffle customers and return it as a list type */
         List<Customer> shuffledCustomers = new List<Customer>();
         for (int i = 0; i < allCustomers.Count; i++)
         {

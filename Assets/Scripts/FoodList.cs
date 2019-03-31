@@ -8,9 +8,7 @@ public class FoodList : MonoBehaviour
 
     public List<Food> GetFood(int orderNum)
     {
-        /*
-            Return a non repeated food order in list
-        */
+        /* Return a non repeated food order in list */
         if (orderNum > allFood.Count) { return null; }
         List<Food> randomFoodList = new List<Food>();
         for (int i = 0; i < orderNum; i++)
