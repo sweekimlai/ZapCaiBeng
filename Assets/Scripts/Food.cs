@@ -15,6 +15,6 @@ public class Food : MonoBehaviour
             Debug.LogError("customerCommands not found");
         }
         Sprite foodImage = GetComponent<SpriteRenderer>().sprite;
-        customerCommands.GetComponent<CustomerCommands>().FindMatchingFood(foodImage.name);
+        customerCommands.FindMatchingFood(foodImage.name);
     }
 }
