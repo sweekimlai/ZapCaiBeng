@@ -21,10 +21,21 @@ public class CustomerCommands : MonoBehaviour
     float foodIconScale = 0.4f;
     int numberOfOrder = 3;
 
-    IEnumerator WaitTimeBeforeDoneServing(float timeToWait)
+    private void Start()
+    {
+        CallingAllCustomers();
+        //CallingNextCustomer();
+        StartCoroutine(WaitTimeBeforeDoneServing(1.5f, emptyAction));
+    }
+
+    private void emptyAction(){}
+
+    IEnumerator WaitTimeBeforeDoneServing(float timeToWait, System.Action onComplete)
     {
         yield return new WaitForSeconds(timeToWait);
-        DoneServing();
+        //DoneServing();
+
+        onComplete();
         CallingNextCustomer();
     }
 
@@ -59,9 +70,10 @@ public class CustomerCommands : MonoBehaviour
             for(int i = 0; i < customerCount; i++)
             {
                 GameObject nextCustomer = customerGroup.transform.GetChild(i).gameObject;
-                if(nextCustomer.GetComponent<Customer>().NotYetServed())
+                if(!nextCustomer.GetComponent<Customer>().IsServed())
                 {
                     currentCustomer = nextCustomer;
+                    currentCustomer.GetComponent<Customer>().SetServeStatus(true);
                     break;
                 }
             }
@@ -139,8 +151,9 @@ public class CustomerCommands : MonoBehaviour
     {
         if(foodOrderGroup.transform.childCount == tickGroup.transform.childCount)
         {
-            currentCustomer.GetComponent<Customer>().SetServeStatus(false);
-            StartCoroutine(WaitTimeBeforeDoneServing(0.25f));            
+            //currentCustomer.GetComponent<Customer>().SetServeStatus(false);
+            //StartCoroutine(WaitTimeBeforeDoneServing(0.25f));
+            StartCoroutine(WaitTimeBeforeDoneServing(0.25f,DoneServing));
         }
     }
 

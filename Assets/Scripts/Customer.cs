@@ -9,7 +9,7 @@ public class Customer : MonoBehaviour
     [SerializeField] GameObject foodList;
 
     bool startMoving = false;
-    bool notServed = true;
+    bool served = false;
 
     public void StartMoving()
     {
@@ -21,14 +21,14 @@ public class Customer : MonoBehaviour
         startMoving = false;
     }
 
-    public bool NotYetServed()
+    public bool IsServed()
     {
-        return notServed;
+        return served;
     }
 
     public void SetServeStatus(bool status)
     {
-        notServed = status;
+        served = status;
     }
 
     private void Update()
