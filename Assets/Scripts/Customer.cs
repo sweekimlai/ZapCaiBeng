@@ -8,34 +8,34 @@ public class Customer : MonoBehaviour
     [SerializeField] GameObject speechBubble;
     [SerializeField] GameObject foodList;
 
+    public enum status {WAIT,SERVE,LEAVE};
+
+    CustomerCommands custormerCommands;
     bool startMoving = false;
-    bool served = false;
+    float moveTargetLocation = 0.0f;
+    status customerStatus = status.WAIT;
 
-    public void StartMoving()
-    {
-        startMoving = true;
-    }
+    public bool StartMoving { get; set; }
 
-    public void StopMoving()
-    {
-        startMoving = false;
-    }
+    public float MoveTargetLocation { get; set; }
 
-    public bool IsServed()
-    {
-        return served;
-    }
-
-    public void SetServeStatus(bool status)
-    {
-        served = status;
-    }
+    public status CustomerStatus { get; set; }
+   
+    public CustomerCommands CustomerCommands { get; set; }
 
     private void Update()
     {
-        if(startMoving)
+        if(StartMoving)
         {
-            transform.Translate(Vector2.left * speed * Time.deltaTime);
+            if(transform.position.x > MoveTargetLocation)
+            {
+                transform.Translate(Vector2.left * speed * Time.deltaTime);                
+            }
+            else
+            {
+                StartMoving = false;
+                CustomerCommands.ShowFoodOrder();
+            }
         }
     }
 }

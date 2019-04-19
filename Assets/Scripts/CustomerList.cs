@@ -1,26 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CustomerList : MonoBehaviour
 {
-    [SerializeField] List<Customer> allCustomers;
-    
-    private List<Customer> ShuffleCustomers()
+    [SerializeField] Customer[] allCustomerArray = new Customer[10];
+
+    private Customer[] ShuffeleCustomerArray(int customerCount)
     {
-        /* shuffle customers and return it as a list type */
-        List<Customer> shuffledCustomers = new List<Customer>();
-        for (int i = 0; i < allCustomers.Count; i++)
+        Customer[] shuffledCustomerArray = new Customer[customerCount];
+        for(int i = 0; i < customerCount; i++)
         {
             bool found = true;
             while(found)
             {
                 found = false;
                 int rnd = Random.Range(0, 10);
-                Customer customer = allCustomers[rnd];
-                if (!shuffledCustomers.Contains(customer))
+                Customer customer = allCustomerArray[rnd];
+                if(!shuffledCustomerArray.Contains(customer))
                 {
-                    shuffledCustomers.Add(customer);
+                    shuffledCustomerArray[i] = customer;
                 }
                 else
                 {
@@ -28,12 +28,11 @@ public class CustomerList : MonoBehaviour
                 }
             }
         }
-
-        return shuffledCustomers;
+        return shuffledCustomerArray;
     }
 
-    public List<Customer> GetAllCustomers()
-    {        
-        return ShuffleCustomers();
+    public Customer[] GetAllCustomerArray(int customerCount)
+    {
+        return ShuffeleCustomerArray(customerCount);
     }
 }
