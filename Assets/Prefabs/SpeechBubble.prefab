@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5243349447543177272}
   - component: {fileID: 8642659634387494076}
+  - component: {fileID: 6342730214918347056}
   m_Layer: 0
   m_Name: speechBubble
   m_TagString: Untagged
@@ -142,6 +143,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6342730214918347056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127274820718082279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c45d01c57126ef645a7833e8c9f1ddba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customerList: {fileID: 0}
+  foodList: {fileID: 0}
 --- !u!1 &7394430860868373467
 GameObject:
   m_ObjectHideFlags: 0

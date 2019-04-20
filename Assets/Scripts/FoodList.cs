@@ -38,6 +38,19 @@ public class FoodList : MonoBehaviour
         return transform.childCount;
     }
 
+    public GameObject[] GetCurrentOrder()
+    {
+        /* Return all food child gameobjects under foodList as array */
+
+        int foodOrderCount = GetChildCount();
+        GameObject[] currentOrder = new GameObject[foodOrderCount];
+        for (int i = 0; i < foodOrderCount; i++)
+        {
+            currentOrder[i] = GetFood(i);
+        }
+        return currentOrder;
+    }
+
     public GameObject GetFood(int index)
     {
         return transform.GetChild(index).gameObject;

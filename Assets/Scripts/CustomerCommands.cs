@@ -4,132 +4,40 @@ using UnityEngine;
 
 public class CustomerCommands : MonoBehaviour
 {   
-    [SerializeField] GameObject customerQueueLocation;
-    [SerializeField] GameObject customerServeLocation;
-    [SerializeField] GameObject customerLeaveLocation;
+    [SerializeField] CustomerLeaveLocation leavePos;
     [SerializeField] CustomerList customerList;
     [SerializeField] FoodList foodList;
     [SerializeField] GameObject tick;
-    [SerializeField] GameObject speechBubble;
-    [SerializeField] GameObject tickGroup;
-    [SerializeField] float queueGap = 0.5f;
-    [SerializeField] int topOrderLayer = 20;
-    [SerializeField] [Range(1,10)] int customerCount = 10;
-
-    GameObject currentSpeechBubble;
-    GameObject currentCustomer;
-    float moveSpeed;    
-    float foodIconScale = 0.4f;
+    [SerializeField] SpeechBubble speechBubble;
+    [SerializeField] TickGroup tickGroup;
     int numberOfOrder = 3;
 
     private void Start()
     {
-        CallingAllCustomers();
+        customerList.CallingAllCustomers(this);
         StartCoroutine(WaitTimeBeforeDoneServing(1.5f, emptyAction));
     }
 
     private void emptyAction(){}
 
-    private float GetServeLocation()
-    {
-        return customerServeLocation.transform.position.x;
-    }
-
-    private float GetLeaveLocation()
-    {
-        return customerLeaveLocation.transform.position.x;
-    }
-
     IEnumerator WaitTimeBeforeDoneServing(float timeToWait, System.Action action)
     {
         yield return new WaitForSeconds(timeToWait);
         action();
-        CallingNextCustomer();
-    }
-
-    public void CallingAllCustomers()
-    {
-        /* Gather all Customer GameObjects and line them up based on the CustomerQueue 
-        gameobject X position. Set a X pos gap between each customer and assign each
-        customer with an order layer */
-
-        Customer[] allCustomerArray = customerList.GetAllCustomerArray(customerCount);
-        float customerXPos = customerQueueLocation.transform.position.x;
-        int customerOrderLayer = topOrderLayer;
-        foreach (Customer customer in allCustomerArray)
-        {
-            Vector2 customerQueuePosition = new Vector2(customerXPos, customerQueueLocation.transform.position.y);
-            Customer newCustomer = Instantiate(customer, customerQueuePosition, Quaternion.identity) as Customer;
-            newCustomer.GetComponent<Renderer>().sortingOrder = customerOrderLayer;
-            newCustomer.GetComponent<Customer>().CustomerCommands = this;
-            //newCustomer.transform.parent = customerGroup.transform;
-            newCustomer.transform.parent = customerList.transform;
-            customerXPos += queueGap;
-            customerOrderLayer -= 1;
-        }
-    }
-
-    public void CallingNextCustomer()
-    {
-        /* Find the first in the queue, top child gameobject under 
-        CustomerQueue gameobject and return it as current customer */
-        int customerCount = customerList.transform.childCount;
-        
-        if (customerCount > 0)
-        {
-            for(int i = 0; i < customerCount; i++)
-            {
-                GameObject nextCustomer = customerList.transform.GetChild(i).gameObject;
-                if (nextCustomer.GetComponent<Customer>().CustomerStatus == Customer.status.WAIT)
-                {
-                    currentCustomer = nextCustomer;
-                    currentCustomer.GetComponent<Customer>().CustomerStatus = Customer.status.SERVE;
-                    currentCustomer.GetComponent<Customer>().MoveTargetLocation = GetServeLocation();
-                    currentCustomer.GetComponent<Customer>().StartMoving = true;
-                    break;
-                }
-            }            
-        }
-    }
-
-    public void DestroyFoodOrder()
-    {
-        /* Destroy speechBubble and foodOrderGroup gameobject
-        along with all its children gameobjects */
-        Destroy(currentSpeechBubble.gameObject);
-        foodList.DestroyAllChildObject();
+        customerList.CallingNextCustomer();
     }
 
     public void DoneServing()
     {
-        /* When serving is done, destroy SpeechBubble, ticks gameobject and
+        /* When serving is done, hide SpeechBubble, destroy ticks gameobject and
         set CurrentCustomer moving to left */
-        if (customerList.transform.childCount > 0)
+        if (customerList.GetChildCount() > 0)
         {
-            currentCustomer.GetComponent<Customer>().MoveTargetLocation = GetLeaveLocation();
-            currentCustomer.GetComponent<Customer>().StartMoving = true;
-            currentCustomer.GetComponent<Customer>().CustomerStatus = Customer.status.LEAVE;
-
-            DestroyFoodOrder();
-            for(int i = 0; i < tickGroup.transform.childCount; i++)
-            {
-                Destroy(tickGroup.transform.GetChild(i).gameObject);
-            }
+            customerList.CustomerLeaving();
+            speechBubble.Hide();
+            foodList.DestroyAllChildObject();
+            tickGroup.DestroyAllChildObject();
         }
-    }
-
-    public List<GameObject> GetCurrentOrder()
-    {
-        /* Return all food child gameobjects under foodOrderGroup as list */
-        if (!foodList) { return null; }
-
-        List<GameObject> currentOrder = new List<GameObject>();
-        int foodOrderCount = foodList.GetChildCount();
-        for (int i = 0; i < foodOrderCount; i++)
-        {
-            currentOrder.Add(foodList.GetFood(i));
-        }
-        return currentOrder;
     }
 
     public void ShowFoodOrder()
@@ -140,25 +48,15 @@ public class CustomerCommands : MonoBehaviour
         gameobjects indicating the locations of the spawned food 
         gameobjects. At the moment the number of foods, three, is
         hardcoded */
-        
-        currentSpeechBubble = Instantiate(speechBubble, 
-            currentCustomer.transform.GetChild(0).transform.position, Quaternion.identity) as GameObject;
 
+        speechBubble.Show(customerList.CurrentCustomer);
         Food[] randomFoodArray = foodList.GetFoodArray(numberOfOrder);
-        int childIndex = 0;
-        foreach (Food food in randomFoodArray)
-        {         
-            Food newFood = Instantiate(food, currentSpeechBubble.transform.GetChild(childIndex).position,
-                Quaternion.identity) as Food;
-            newFood.transform.localScale = new Vector3(foodIconScale, foodIconScale, 0.0f);
-            newFood.transform.parent = foodList.transform;
-            childIndex += 1;
-        }
+        speechBubble.DisplayFood(randomFoodArray, foodList);
     }
 
     public void checkAllMatching()
     {
-        if(foodList.GetChildCount() == tickGroup.transform.childCount)
+        if(foodList.GetChildCount() == tickGroup.GetChildCount())
         {
             StartCoroutine(WaitTimeBeforeDoneServing(0.25f,DoneServing));
         }
@@ -172,9 +70,9 @@ public class CustomerCommands : MonoBehaviour
         if(customerList.transform.childCount <= 0) { return; }
 
         bool foodFound = false;
-        List<GameObject> currentOrder = GetCurrentOrder();
+        GameObject[] currentOrder = foodList.GetCurrentOrder();
 
-        if (currentOrder.Count <= 0) { return; }
+        if (currentOrder.Length <= 0) { return; }
 
         foreach (GameObject order in currentOrder)
         {
