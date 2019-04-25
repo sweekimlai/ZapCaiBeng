@@ -3004,7 +3004,7 @@ PrefabInstance:
     - target: {fileID: 6263352173514324742, guid: b2faa019ade6bb149a7bb2c85bc0d691,
         type: 3}
       propertyPath: customerCount
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6263352173514324737, guid: b2faa019ade6bb149a7bb2c85bc0d691,
         type: 3}

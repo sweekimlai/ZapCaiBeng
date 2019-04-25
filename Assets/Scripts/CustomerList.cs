@@ -14,14 +14,31 @@ public class CustomerList : MonoBehaviour
     [SerializeField] Customer[] allCustomerArray = new Customer[10];
 
     public Customer CurrentCustomer { get; set; }
+    public bool MoveUpInQueue { get; set; }
+    public int MoveUpIndex { get; set; }
+    public float MoveUpTarget { get; set; }
+
+    private void Start()
+    {
+        MoveUpInQueue = false;
+        MoveUpIndex = -1;
+        MoveUpTarget = 9999.9f;
+    }
+
 
     public int GetChildCount()
     {
         return transform.childCount;
     }
 
+    public GameObject GetChild(int index)
+    {
+        return transform.GetChild(index).gameObject;
+    }
+
     private Customer[] GetAllCustomerArray(int customerCount)
     {
+        /* Return an array of customers in random non repeated ordered */
         Customer[] shuffledCustomerArray = new Customer[customerCount];
         for(int i = 0; i < customerCount; i++)
         {
@@ -68,7 +85,7 @@ public class CustomerList : MonoBehaviour
     public void CallingNextCustomer()
     {
         /* Find the first in the queue, top child gameobject under 
-        CustomerQueue gameobject and return it as current customer */
+        CustomerQueue gameobject and set it as current customer */
         int customerCount = transform.childCount;
 
         if (customerCount > 0)
@@ -90,8 +107,48 @@ public class CustomerList : MonoBehaviour
 
     public void CustomerLeaving()
     {
+        /* Setting the customer to start moving with MoveTargetLocation 
+        as target locator to move to */
         CurrentCustomer.MoveTargetLocation = leavePos.GetLocation().x;
         CurrentCustomer.StartMoving = true;
         CurrentCustomer.CustomerStatus = Customer.status.LEAVE;
+    }
+
+    private int FindNextCustomer(Customer thisCustomer)
+    {
+        int customerCount = GetChildCount();
+        int nextIndex = 0;
+
+        for (int i = 0; i < customerCount; i++)
+        {
+            Customer customer = transform.GetChild(i).GetComponent<Customer>();
+            if(customer == thisCustomer)
+            {
+                nextIndex = i + 1;
+            }
+        }
+        return nextIndex;
+    }
+
+    public void _MoveCustomerUpInQueue(Customer thisCustomer)
+    {
+        Debug.Log(string.Format("thisCustomer is {0}", thisCustomer.name));
+        Debug.Log(string.Format("ChildCount {0}", transform.childCount));
+    }
+
+    public void MoveCustomerUpInQueue(Customer thisCustomer)
+    {
+        if (GetChildCount() <= 0) { return; }
+        
+        int index = FindNextCustomer(thisCustomer);
+        
+        if(index >= GetChildCount()) { return; }
+
+        Customer customer = transform.GetChild(index).GetComponent<Customer>();
+        if (customer.CustomerStatus == Customer.status.WAIT)
+        {
+            customer.MoveTargetLocation = transform.GetChild(index).transform.position.x - queueGap;
+            customer.StartMoving = true;
+        }        
     }
 }

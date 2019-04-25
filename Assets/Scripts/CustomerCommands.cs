@@ -25,6 +25,7 @@ public class CustomerCommands : MonoBehaviour
         yield return new WaitForSeconds(timeToWait);
         action();
         customerList.CallingNextCustomer();
+        customerList.MoveCustomerUpInQueue(customerList.CurrentCustomer);
     }
 
     public void DoneServing()

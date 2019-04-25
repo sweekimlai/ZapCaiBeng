@@ -10,10 +10,8 @@ public class Customer : MonoBehaviour
 
     public enum status {WAIT,SERVE,LEAVE};
 
-    CustomerCommands custormerCommands;
     bool startMoving = false;
     float moveTargetLocation = 0.0f;
-    status customerStatus = status.WAIT;
 
     public bool StartMoving { get; set; }
 
@@ -24,7 +22,7 @@ public class Customer : MonoBehaviour
     public CustomerCommands CustomerCommands { get; set; }
 
     private void Update()
-    {
+    {       
         if(StartMoving)
         {
             if(transform.position.x > MoveTargetLocation)
@@ -34,7 +32,15 @@ public class Customer : MonoBehaviour
             else
             {
                 StartMoving = false;
-                CustomerCommands.ShowFoodOrder();
+                if(CustomerStatus == status.SERVE)
+                {
+                    CustomerCommands.ShowFoodOrder();
+                }
+                else if (CustomerStatus == status.WAIT)
+                {
+                    CustomerList customerList = FindObjectOfType<CustomerList>();
+                    customerList.MoveCustomerUpInQueue(this);
+                }
             }
         }
     }

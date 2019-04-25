@@ -130,6 +130,8 @@ MonoBehaviour:
     type: 3}
   foodList: {fileID: 8434737017988628889, guid: b3ccfa7294537ef48b421dbe1b484748,
     type: 3}
+  customerList: {fileID: 6263352173514324742, guid: b2faa019ade6bb149a7bb2c85bc0d691,
+    type: 3}
 --- !u!61 &165858734181443150
 BoxCollider2D:
   m_ObjectHideFlags: 0

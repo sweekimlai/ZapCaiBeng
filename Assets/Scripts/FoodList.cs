@@ -53,6 +53,7 @@ public class FoodList : MonoBehaviour
 
     public GameObject GetFood(int index)
     {
+        /* Return the food item based on requested index */
         return transform.GetChild(index).gameObject;
     }
 
