@@ -114,8 +114,9 @@ public class CustomerList : MonoBehaviour
         CurrentCustomer.CustomerStatus = Customer.status.LEAVE;
     }
 
-    private int FindNextCustomer(Customer thisCustomer)
+    private int FindNextCustomerIndex(Customer thisCustomer)
     {
+        /* Find the next customer from the in coming customer. Return it as index */
         int customerCount = GetChildCount();
         int nextIndex = 0;
 
@@ -130,17 +131,13 @@ public class CustomerList : MonoBehaviour
         return nextIndex;
     }
 
-    public void _MoveCustomerUpInQueue(Customer thisCustomer)
-    {
-        Debug.Log(string.Format("thisCustomer is {0}", thisCustomer.name));
-        Debug.Log(string.Format("ChildCount {0}", transform.childCount));
-    }
-
     public void MoveCustomerUpInQueue(Customer thisCustomer)
     {
+        /* Find the next customer index from incoming customer 
+        then set the target location and enable StartMoving*/
         if (GetChildCount() <= 0) { return; }
         
-        int index = FindNextCustomer(thisCustomer);
+        int index = FindNextCustomerIndex(thisCustomer);
         
         if(index >= GetChildCount()) { return; }
 
@@ -148,6 +145,7 @@ public class CustomerList : MonoBehaviour
         if (customer.CustomerStatus == Customer.status.WAIT)
         {
             customer.MoveTargetLocation = transform.GetChild(index).transform.position.x - queueGap;
+            customer.CustomerList = this;
             customer.StartMoving = true;
         }        
     }

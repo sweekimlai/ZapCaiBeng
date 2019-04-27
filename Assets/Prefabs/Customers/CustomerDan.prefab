@@ -125,12 +125,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 376cb8d88a45e5b45971bf021dacd10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 12
   speechBubble: {fileID: 2127274820718082279, guid: 0ec0d1a3ab2009649860ebf3174b822b,
     type: 3}
   foodList: {fileID: 8434737017988628889, guid: b3ccfa7294537ef48b421dbe1b484748,
-    type: 3}
-  customerList: {fileID: 6263352173514324742, guid: b2faa019ade6bb149a7bb2c85bc0d691,
     type: 3}
 --- !u!61 &7227644822159470100
 BoxCollider2D:

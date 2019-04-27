@@ -57,6 +57,8 @@ public class CustomerCommands : MonoBehaviour
 
     public void checkAllMatching()
     {
+        /* Check if the ordered food is the same as ticks, 
+         if so meaning all matches*/
         if(foodList.GetChildCount() == tickGroup.GetChildCount())
         {
             StartCoroutine(WaitTimeBeforeDoneServing(0.25f,DoneServing));
