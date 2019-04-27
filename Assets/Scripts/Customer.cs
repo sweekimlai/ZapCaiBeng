@@ -8,6 +8,10 @@ public class Customer : MonoBehaviour
     [SerializeField] GameObject speechBubble;
     [SerializeField] GameObject foodList;
 
+    float moveUpSpeed = 3.0f;
+
+    Animator customerAnimator;
+
     public enum status {WAIT,SERVE,LEAVE};
 
     public bool StartMoving { get; set; }
@@ -25,6 +29,7 @@ public class Customer : MonoBehaviour
         StartMoving = false;
         CustomerStatus = status.WAIT;
         MoveTargetLocation = 0.0f;
+        customerAnimator = transform.Find("Body").gameObject.GetComponent<Animator>();
     }
 
     private void Update()
@@ -38,13 +43,22 @@ public class Customer : MonoBehaviour
         if(StartMoving)
         {
             if(transform.position.x > MoveTargetLocation)
-            {
-                transform.Translate(Vector2.left * speed * Time.deltaTime);                
+            {                
+                if (CustomerStatus == status.WAIT)
+                {
+                    transform.Translate(Vector2.left * moveUpSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    transform.Translate(Vector2.left * speed * Time.deltaTime);
+                }
+                customerAnimator.SetBool("StartWalk", true);
             }
             else
             {
                 StartMoving = false;
-                if(CustomerStatus == status.SERVE)
+                customerAnimator.SetBool("StartWalk", false);
+                if (CustomerStatus == status.SERVE)
                 {
                     CustomerCommands.ShowFoodOrder();
                 }

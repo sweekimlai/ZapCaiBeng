@@ -14,7 +14,8 @@ public class SpeechBubble : MonoBehaviour
     public void Show(Customer currentCustomer)
     {
         transform.GetComponent<SpriteRenderer>().enabled = true;
-        transform.position = currentCustomer.transform.GetChild(0).transform.position;
+        GameObject speechLocation = currentCustomer.transform.Find("SpeechBubbleLocation").gameObject;
+        transform.position = speechLocation.transform.position;        
     }
 
     public void Hide()

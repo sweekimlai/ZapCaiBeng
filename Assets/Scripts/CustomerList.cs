@@ -39,6 +39,7 @@ public class CustomerList : MonoBehaviour
     private Customer[] GetAllCustomerArray(int customerCount)
     {
         /* Return an array of customers in random non repeated ordered */
+        Debug.Log(string.Format("Customer count is {0}", customerCount));
         Customer[] shuffledCustomerArray = new Customer[customerCount];
         for(int i = 0; i < customerCount; i++)
         {
@@ -74,7 +75,9 @@ public class CustomerList : MonoBehaviour
         {
             Vector2 customerQueuePosition = new Vector2(customerXPos, queuePos.GetLocation().y);
             Customer newCustomer = Instantiate(customer, customerQueuePosition, Quaternion.identity) as Customer;
-            newCustomer.GetComponent<Renderer>().sortingOrder = customerOrderLayer;
+            GameObject customerBody = newCustomer.transform.Find("Body").gameObject;
+            customerBody.GetComponent<Renderer>().sortingOrder = customerOrderLayer;
+            //newCustomer.GetComponent<Renderer>().sortingOrder = customerOrderLayer;
             newCustomer.GetComponent<Customer>().CustomerCommands = commands;
             newCustomer.transform.parent = transform;
             customerXPos += queueGap;
