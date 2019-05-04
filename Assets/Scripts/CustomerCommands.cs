@@ -10,6 +10,8 @@ public class CustomerCommands : MonoBehaviour
     [SerializeField] GameObject tick;
     [SerializeField] SpeechBubble speechBubble;
     [SerializeField] TickGroup tickGroup;
+    [SerializeField] Earning earningText;
+    [SerializeField] Error error;
     int numberOfOrder = 3;
 
     private void Start()
@@ -86,6 +88,7 @@ public class CustomerCommands : MonoBehaviour
                 foodSprite.color = new Color(1f, 1f, 1f, 0.5f);                
                 GameObject newTick = Instantiate(tick, order.transform.position, Quaternion.identity) as GameObject;
                 newTick.transform.parent = tickGroup.transform;
+                earningText.AddEarning();
             }
         }
 
@@ -94,6 +97,7 @@ public class CustomerCommands : MonoBehaviour
         if(!foodFound)
         {
             Debug.Log(string.Format("Selected food {0} not found", selectedFood));
+            error.AddError();
         }
     }
 }
