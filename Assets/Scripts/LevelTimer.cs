@@ -6,10 +6,20 @@ using UnityEngine;
 public class LevelTimer : MonoBehaviour
 {
     [Tooltip("Our level timer in seconds")]
-    [SerializeField] float levelTime = 50;
+    float levelTime;
     bool timesUp = false;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        setupLevelTime();
+    }
+
+    private void setupLevelTime()
+    {
+        levelTime = GameSession.gameSession.levelTime - GameSession.gameSession.levelTimeDecremnt;
+        Debug.Log(string.Format("Level Time is {0}", levelTime));
+    }
+
     void Update()
     {
         if (timesUp) { return; }

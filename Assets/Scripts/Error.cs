@@ -10,6 +10,15 @@ public class Error : MonoBehaviour
     void Start()
     {
         errorCount = 0;
+        setupErrorCount();
+    }
+
+    private void setupErrorCount()
+    {
+        for(int i = 0; i < GameSession.gameSession.errorCount; i++)
+        {
+            AddError();
+        }
     }
     
     public void AddError()
