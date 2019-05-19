@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,16 @@ public class LevelLoader : MonoBehaviour
 
     void Start()
     {
+        DebugLevelDict();
         StartCoroutine(WaitTimeBeforeStart());        
+    }
+
+    private void DebugLevelDict()
+    {
+        foreach (var i in GameSession.gameSession.allLevelDict)
+        {
+            Debug.Log(string.Format("Key is: {0}, Value is: {1}", i.Key, i.Value));           
+        }
     }
 
     private int GetSmallestOccuranceNumber(Dictionary<string,int> dict)
@@ -41,15 +51,12 @@ public class LevelLoader : MonoBehaviour
             if(allLevelDict[allScenes[rnd]] == smallestNumber)
             {
                 nextSceneName = allScenes[rnd];
+                GameSession.gameSession.allLevelDict[nextSceneName] += 1;
                 notFound = false;
             }
         }
 
         return nextSceneName;
-        //foreach (var i in allLevelDict)
-        //{
-        //    Debug.Log(string.Format("Key is: {0}, Value is: {1}", i.Key, i.Value));           
-       // }
     }
 
     IEnumerator WaitTimeBeforeStart()

@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CustomerCommands: {fileID: 693240585}
+  customerList: {fileID: 662337155}
 --- !u!61 &134334719
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3310,7 +3311,7 @@ PrefabInstance:
     - target: {fileID: 6263352173514324742, guid: b2faa019ade6bb149a7bb2c85bc0d691,
         type: 3}
       propertyPath: customerCount
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6263352173514324737, guid: b2faa019ade6bb149a7bb2c85bc0d691,
         type: 3}

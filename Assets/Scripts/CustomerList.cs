@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class CustomerList : MonoBehaviour
@@ -17,12 +18,14 @@ public class CustomerList : MonoBehaviour
     public bool MoveUpInQueue { get; set; }
     public int MoveUpIndex { get; set; }
     public float MoveUpTarget { get; set; }
+    public int CustomerLeft { get; set; }
 
     private void Start()
     {
         MoveUpInQueue = false;
         MoveUpIndex = -1;
         MoveUpTarget = 9999.9f;
+        CustomerLeft = customerCount;
     }
 
 
@@ -148,6 +151,19 @@ public class CustomerList : MonoBehaviour
             customer.MoveTargetLocation = transform.GetChild(index).transform.position.x - queueGap;
             customer.CustomerList = this;
             customer.StartMoving = true;
+        }
+    }
+
+    public void CheckWinning()
+    {
+        if(CustomerLeft <= 0)
+        {
+            Debug.Log("No More Customers. You Win");
+            SceneManager.LoadScene("LevelLoader");
+        }
+        else
+        {
+            Debug.Log(string.Format("There's still {0} left", CustomerLeft));
         }
     }
 }

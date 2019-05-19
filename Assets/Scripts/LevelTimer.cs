@@ -16,7 +16,8 @@ public class LevelTimer : MonoBehaviour
 
     private void setupLevelTime()
     {
-        levelTime = GameSession.gameSession.levelTime - GameSession.gameSession.levelTimeDecremnt;
+        GameSession.gameSession.levelTime -= GameSession.gameSession.levelTimeDecremnt;
+        levelTime = GameSession.gameSession.levelTime;
         Debug.Log(string.Format("Level Time is {0}", levelTime));
     }
 
@@ -24,8 +25,8 @@ public class LevelTimer : MonoBehaviour
     {
         if (timesUp) { return; }
         //Normalise the time value between 0 -1 
-        GetComponent<Slider>().value = Time.timeSinceLevelLoad / levelTime;
-        
+        GetComponent<Slider>().value = Time.timeSinceLevelLoad / levelTime;       
+
         if(Time.timeSinceLevelLoad >= levelTime)
         {
             timesUp = true;
