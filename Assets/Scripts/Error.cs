@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class Error : MonoBehaviour
@@ -43,5 +44,6 @@ public class Error : MonoBehaviour
     private void ErrorGameOver()
     {
         Debug.Log("Three Errors Game Over!");
+        SceneManager.LoadScene("GameOverScreen");
     }
 }

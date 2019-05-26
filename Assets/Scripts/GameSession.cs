@@ -7,6 +7,7 @@ public class GameSession : MonoBehaviour
 {
     public string[] allLevels = new string[3];
     public static GameSession gameSession { get; private set; }
+    public float Earnings { get; set; }
 
     public float levelTime = 100.0f;
     public float levelTimeDecremnt = 10.0f;
@@ -28,9 +29,20 @@ public class GameSession : MonoBehaviour
 
     private void Start()
     {
-        foreach(string level in allLevels)
+        foreach (string level in allLevels)
         {
             allLevelDict.Add(level, 0);
         }
+    }
+
+    public void ResetGameSession()
+    {
+        foreach (string level in allLevels)
+        {
+            allLevelDict[level] = 0;
+        }
+        Earnings = 0f;
+        errorCount = 0;
+        levelTime = 100.0f;
     }
 }

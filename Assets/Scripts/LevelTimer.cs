@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class LevelTimer : MonoBehaviour
@@ -31,6 +32,7 @@ public class LevelTimer : MonoBehaviour
         {
             timesUp = true;
             Debug.Log("Times Up Game Over");
+            SceneManager.LoadScene("GameOverScreen");
         }
     }
 }
